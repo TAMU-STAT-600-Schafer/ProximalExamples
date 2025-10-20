@@ -6,7 +6,7 @@ source("LASSO_CoordinateDescent.R")
 # Functions written in the starter code
 source("StarterCode.R")
 # For later time comparisons
-library(microbenchmark)
+library(bench)
 #########################################
 # Generate toy example dataset, standardize
 #########################################
@@ -29,9 +29,10 @@ plot(out_coord$beta, out_prox$beta)
 
 
 # Check the implementation time
-microbenchmark(
+mark(
   fitLASSOstandardized(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-6),
-  fitLASSOstandardized_prox(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-6, s = 0.1)
+  fitLASSOstandardized_prox(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-6, s = 0.1),
+  check = FALSE
 )
 
 #########################################
@@ -58,9 +59,10 @@ out_coord$fmin - out_admm$fmin
 plot(out_coord$beta, out_admm$beta)
 
 # Check the implementation time
-microbenchmark(
+mark(
   fitLASSOstandardized(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-10),
   fitLASSOstandardized_prox(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-10, s = 0.1),
   fitLASSOstandardized_prox_Nesterov(out$Xtilde, out$Ytilde, beta_start = rep(0, p), lambda = lambda1, eps = 1e-10, s = 0.1),
-  fitLASSOstandardized_ADMM(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-10, tau = 0.1)
+  fitLASSOstandardized_ADMM(out$Xtilde, out$Ytilde, beta_start = rep(0, p),lambda = lambda1, eps = 1e-10, tau = 0.1),
+  check = FALSE
 )
